@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Contrast Checker</title>
+    
+    <link rel="icon" href="image_31.png">
+    <link rel="apple-touch-icon" href="image_31.png">
+
     <style>
         :root {
             --main: #333;
@@ -53,7 +57,6 @@
             -webkit-text-fill-color: var(--main) !important;
             opacity: 1 !important;
         }
-        /* 視認性を上げたPlaceholder */
         input::placeholder { color: #aaa !important; -webkit-text-fill-color: #aaa !important; font-weight: 500; }
 
         .clear-btn {
@@ -76,7 +79,6 @@
             background: rgba(0,0,0,0.05);
         }
 
-        /* フッターボタン類 - Slug Maker準拠 */
         .footer-btns { margin-top: 40px; }
         .kofi-btn {
             display: inline-block; background: var(--main); color: #fff;
@@ -92,7 +94,6 @@
         footer { margin-top: 40px; font-size: 11px; color: #aaa; line-height: 1.8; }
         .footer-copy { font-weight: bold; color: #999; margin-top: 8px; }
 
-        /* Modal - Slug Maker準拠 */
         #modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100;
