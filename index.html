@@ -32,17 +32,12 @@
             text-align: center;
         }
 
-        h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px; }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; }
 
-        .input-group { margin-bottom: 20px; text-align: left; position: relative; }
-        
-        label {
-            display: block; font-size: 0.75rem; font-weight: 800; 
-            margin-bottom: 8px; margin-left: 5px; color: #666;
-        }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 0.75rem; font-weight: 800; margin-bottom: 8px; margin-left: 5px; color: #666; }
 
         .input-wrapper { position: relative; display: flex; align-items: center; }
-
         input {
             width: 100%;
             padding: 15px 45px 15px 15px;
@@ -58,54 +53,57 @@
             -webkit-text-fill-color: var(--main) !important;
             opacity: 1 !important;
         }
-
-        /* 透かし文字（Placeholder）を薄く設定 */
-        input::placeholder { color: #ccc !important; -webkit-text-fill-color: #ccc !important; font-weight: 400; }
+        /* 視認性を上げたPlaceholder */
+        input::placeholder { color: #aaa !important; -webkit-text-fill-color: #aaa !important; font-weight: 500; }
 
         .clear-btn {
             position: absolute; right: 10px; width: 30px; height: 30px;
-            background: #ddd; color: #fff; border-radius: 50%;
+            background: var(--accent); color: #666; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: none; font-size: 16px; font-weight: bold;
+            cursor: pointer; border: none; font-size: 18px; font-weight: bold;
         }
 
         #preview-card {
-            margin-top: 30px; padding: 40px 20px;
-            border-radius: var(--radius); border: 1px solid var(--accent);
+            margin-top: 30px; padding: 50px 20px;
+            border-radius: var(--radius); border: 2px solid var(--accent);
             transition: 0.2s ease;
         }
-
-        .result-title { font-size: 2.2rem; font-weight: 900; margin: 0; }
-        .result-ratio { font-size: 0.95rem; font-weight: 700; margin-top: 10px; opacity: 0.8; }
+        .result-title { font-size: 2.5rem; font-weight: 900; margin: 0; }
+        .result-ratio { font-size: 1rem; font-weight: 700; margin-top: 10px; }
         .wcag-status {
-            display: inline-block; margin-top: 15px; font-size: 0.7rem;
-            font-weight: 800; padding: 5px 12px; border-radius: 10px;
-            background: rgba(0,0,0,0.08);
+            display: inline-block; margin-top: 15px; font-size: 0.75rem;
+            font-weight: 800; padding: 6px 14px; border-radius: 10px;
+            background: rgba(0,0,0,0.05);
         }
 
-        .action-btn {
-            background: #111; color: #fff; border: none; width: 100%;
-            padding: 15px; border-radius: var(--radius); font-weight: 800;
-            font-size: 0.9rem; margin-top: 25px; cursor: pointer;
+        /* フッターボタン類 - Slug Maker準拠 */
+        .footer-btns { margin-top: 40px; }
+        .kofi-btn {
+            display: inline-block; background: var(--main); color: #fff;
+            padding: 12px 25px; border-radius: var(--radius);
+            text-decoration: none; font-weight: bold; font-size: 14px; margin-bottom: 12px;
+        }
+        .home-btn {
+            display: block; width: 60%; margin: 0 auto; background: var(--accent);
+            color: var(--main); border: none; padding: 10px;
+            border-radius: var(--radius); font-weight: 700; font-size: 13px; cursor: pointer;
         }
 
-        footer { margin-top: 50px; font-size: 11px; color: #aaa; line-height: 1.8; }
-        .footer-copy { font-weight: bold; color: var(--main); margin-top: 8px; }
+        footer { margin-top: 40px; font-size: 11px; color: #aaa; line-height: 1.8; }
+        .footer-copy { font-weight: bold; color: #999; margin-top: 8px; }
 
-        /* Modal Style (Add to Home) */
+        /* Modal - Slug Maker準拠 */
         #modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100;
         }
         .modal-content {
             background: #fff; width: 85%; max-width: 320px; padding: 30px;
-            border-radius: var(--radius); text-align: center;
+            border-radius: var(--radius); text-align: left; position: relative;
         }
-        .modal-content p { font-size: 0.9rem; font-weight: 600; line-height: 1.5; color: #333; }
-        .close-modal {
-            background: #111; color: #fff; border: none; padding: 12px 25px;
-            border-radius: var(--radius); font-weight: 800; margin-top: 20px; cursor: pointer;
-        }
+        .modal-content h3 { margin-top: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        .modal-content p { font-size: 0.95rem; font-weight: 600; line-height: 1.6; color: #333; margin: 15px 0; }
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 20px; color: #ccc; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -116,7 +114,7 @@
     <div class="input-group">
         <label>Background Color</label>
         <div class="input-wrapper">
-            <input type="text" id="bgInput" placeholder="#FFFFFF">
+            <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false">
             <button class="clear-btn" onclick="clearInput('bgInput')">×</button>
         </div>
     </div>
@@ -124,33 +122,35 @@
     <div class="input-group">
         <label>Text Color</label>
         <div class="input-wrapper">
-            <input type="text" id="textInput" placeholder="#333333">
+            <input type="text" id="textInput" placeholder="#333333" spellcheck="false">
             <button class="clear-btn" onclick="clearInput('textInput')">×</button>
         </div>
     </div>
 
     <div id="preview-card">
         <p class="result-title" id="statusText">WAIT</p>
-        <div class="result-ratio" id="ratioText">Enter colors to check</div>
+        <div class="result-ratio" id="ratioText">Enter Hex codes</div>
         <div class="wcag-status" id="wcagText">-</div>
     </div>
 
-    <button class="action-btn" onclick="document.getElementById('modal').style.display='flex'">Add to Home Screen</button>
+    <div class="footer-btns">
+        <a href="https://ko-fi.com/afrorakda" target="_blank" class="kofi-btn">☕ Support me on Ko-fi</a>
+        <button class="home-btn" onclick="document.getElementById('modal').style.display='flex'">Add to Home Screen</button>
+    </div>
 
     <footer>
-        <a href="https://ko-fi.com/afrorakda" target="_blank" style="text-decoration:none;">
-            <div style="background:#111; color:#fff; padding:10px; border-radius:12px; display:inline-block; font-weight:bold; margin-bottom:20px;">☕ Support on Ko-fi</div>
-        </a>
         <div>No login / No tracking / No ads / Browser only</div>
-        <div>Privacy Policy</div>
-        <div class="footer-copy">afrorakda © 2026</div>
+        <div>Privacy Policy / afrorakda © 2026</div>
     </footer>
 </div>
 
 <div id="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <p>To add this tool to your home screen:<br><br>1. Tap the <strong>Share</strong> icon<br>2. Select <strong>"Add to Home Screen"</strong></p>
-        <button class="close-modal" onclick="document.getElementById('modal').style.display='none'">Got it</button>
+        <span class="close-x" onclick="document.getElementById('modal').style.display='none'">×</span>
+        <h3>📱 Install</h3>
+        <p>Add to your home screen.</p>
+        <p>🍏 <strong>iPhone (Safari):</strong><br>Tap Share, then Add to Home Screen.</p>
+        <p>🤖 <strong>Android (Chrome):</strong><br>Tap Menu (⋮), then Add to Home Screen.</p>
     </div>
 </div>
 
@@ -188,13 +188,12 @@
     function checkContrast() {
         const bgVal = bgInput.value || "#FFFFFF";
         const textVal = textInput.value || "#333333";
-        
         const bgRGB = getRGB(bgVal);
         const textRGB = getRGB(textVal);
 
         if (!bgRGB || !textRGB) {
             statusText.innerText = "WAIT";
-            ratioText.innerText = "Enter valid Hex codes";
+            ratioText.innerText = "Check your Hex code";
             wcagText.innerText = "-";
             previewCard.style.backgroundColor = "#fafafa";
             previewCard.style.color = "#ccc";
