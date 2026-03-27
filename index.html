@@ -20,7 +20,6 @@
             margin: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
@@ -28,96 +27,84 @@
         .container {
             width: 100%;
             max-width: 360px;
-            padding: 25px;
+            padding: 40px 20px;
             box-sizing: border-box;
             text-align: center;
         }
 
-        h1 {
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-bottom: 25px;
-            letter-spacing: -0.5px;
-        }
+        h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px; }
 
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
+        .input-group { margin-bottom: 20px; text-align: left; position: relative; }
+        
         label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            margin-left: 5px;
-            text-transform: uppercase;
+            display: block; font-size: 0.75rem; font-weight: 800; 
+            margin-bottom: 8px; margin-left: 5px; color: #666;
         }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; }
 
         input {
             width: 100%;
-            padding: 15px;
+            padding: 15px 45px 15px 15px;
             border: 2px solid var(--accent);
             border-radius: var(--radius);
             background: var(--input-bg);
             font-size: 1rem;
             font-weight: 600;
-            color: var(--main);
+            color: var(--main) !important;
             box-sizing: border-box;
             outline: none;
             -webkit-appearance: none;
-            -webkit-text-fill-color: var(--main);
+            -webkit-text-fill-color: var(--main) !important;
             opacity: 1 !important;
         }
 
+        /* 透かし文字（Placeholder）を薄く設定 */
+        input::placeholder { color: #ccc !important; -webkit-text-fill-color: #ccc !important; font-weight: 400; }
+
+        .clear-btn {
+            position: absolute; right: 10px; width: 30px; height: 30px;
+            background: #ddd; color: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border: none; font-size: 16px; font-weight: bold;
+        }
+
         #preview-card {
-            margin-top: 25px;
-            padding: 30px 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--accent);
-            transition: 0.3s;
+            margin-top: 30px; padding: 40px 20px;
+            border-radius: var(--radius); border: 1px solid var(--accent);
+            transition: 0.2s ease;
         }
 
-        .result-title {
-            font-size: 2rem;
-            font-weight: 900;
-            margin: 0;
-        }
-
-        .result-ratio {
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-top: 10px;
-            opacity: 0.8;
-        }
-
+        .result-title { font-size: 2.2rem; font-weight: 900; margin: 0; }
+        .result-ratio { font-size: 0.95rem; font-weight: 700; margin-top: 10px; opacity: 0.8; }
         .wcag-status {
-            display: inline-block;
-            margin-top: 15px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 4px 12px;
-            border-radius: 10px;
-            background: rgba(0,0,0,0.1);
+            display: inline-block; margin-top: 15px; font-size: 0.7rem;
+            font-weight: 800; padding: 5px 12px; border-radius: 10px;
+            background: rgba(0,0,0,0.08);
         }
 
-        footer {
-            margin-top: 40px;
-            font-size: 11px;
-            color: #aaa;
-            line-height: 1.6;
+        .action-btn {
+            background: #111; color: #fff; border: none; width: 100%;
+            padding: 15px; border-radius: var(--radius); font-weight: 800;
+            font-size: 0.9rem; margin-top: 25px; cursor: pointer;
         }
-        
-        .kofi-link {
-            display: inline-block;
-            background: #111;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: var(--radius);
-            text-decoration: none;
-            font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 12px;
+
+        footer { margin-top: 50px; font-size: 11px; color: #aaa; line-height: 1.8; }
+        .footer-copy { font-weight: bold; color: var(--main); margin-top: 8px; }
+
+        /* Modal Style (Add to Home) */
+        #modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100;
+        }
+        .modal-content {
+            background: #fff; width: 85%; max-width: 320px; padding: 30px;
+            border-radius: var(--radius); text-align: center;
+        }
+        .modal-content p { font-size: 0.9rem; font-weight: 600; line-height: 1.5; color: #333; }
+        .close-modal {
+            background: #111; color: #fff; border: none; padding: 12px 25px;
+            border-radius: var(--radius); font-weight: 800; margin-top: 20px; cursor: pointer;
         }
     </style>
 </head>
@@ -128,26 +115,43 @@
 
     <div class="input-group">
         <label>Background Color</label>
-        <input type="text" id="bgInput" value="#ffffff" placeholder="#FFFFFF">
+        <div class="input-wrapper">
+            <input type="text" id="bgInput" placeholder="#FFFFFF">
+            <button class="clear-btn" onclick="clearInput('bgInput')">×</button>
+        </div>
     </div>
 
     <div class="input-group">
         <label>Text Color</label>
-        <input type="text" id="textInput" value="#333333" placeholder="#333333">
+        <div class="input-wrapper">
+            <input type="text" id="textInput" placeholder="#333333">
+            <button class="clear-btn" onclick="clearInput('textInput')">×</button>
+        </div>
     </div>
 
     <div id="preview-card">
-        <p class="result-title" id="statusText">PASS</p>
-        <div class="result-ratio" id="ratioText">Ratio: 12.63:1</div>
-        <div class="wcag-status" id="wcagText">WCAG AA: SUCCESS</div>
+        <p class="result-title" id="statusText">WAIT</p>
+        <div class="result-ratio" id="ratioText">Enter colors to check</div>
+        <div class="wcag-status" id="wcagText">-</div>
     </div>
 
+    <button class="action-btn" onclick="document.getElementById('modal').style.display='flex'">Add to Home Screen</button>
+
     <footer>
-        <a href="https://ko-fi.com/afrorakda" class="kofi-link">☕ Support on Ko-fi</a>
+        <a href="https://ko-fi.com/afrorakda" target="_blank" style="text-decoration:none;">
+            <div style="background:#111; color:#fff; padding:10px; border-radius:12px; display:inline-block; font-weight:bold; margin-bottom:20px;">☕ Support on Ko-fi</div>
+        </a>
         <div>No login / No tracking / No ads / Browser only</div>
         <div>Privacy Policy</div>
-        <div style="font-weight: bold; color: #333; margin-top: 5px;">afrorakda © 2026</div>
+        <div class="footer-copy">afrorakda © 2026</div>
     </footer>
+</div>
+
+<div id="modal" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <p>To add this tool to your home screen:<br><br>1. Tap the <strong>Share</strong> icon<br>2. Select <strong>"Add to Home Screen"</strong></p>
+        <button class="close-modal" onclick="document.getElementById('modal').style.display='none'">Got it</button>
+    </div>
 </div>
 
 <script>
@@ -158,13 +162,19 @@
     const ratioText = document.getElementById('ratioText');
     const wcagText = document.getElementById('wcagText');
 
+    function clearInput(id) {
+        document.getElementById(id).value = '';
+        checkContrast();
+    }
+
     function getRGB(hex) {
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(s => s + s).join('');
+        if (hex.length !== 6) return null;
         const r = parseInt(hex.substr(0, 2), 16);
         const g = parseInt(hex.substr(2, 2), 16);
         const b = parseInt(hex.substr(4, 2), 16);
-        return [r, g, b];
+        return isNaN(r) || isNaN(g) || isNaN(b) ? null : [r, g, b];
     }
 
     function getLuminance(rgb) {
@@ -176,32 +186,38 @@
     }
 
     function checkContrast() {
-        try {
-            const bgRGB = getRGB(bgInput.value);
-            const textRGB = getRGB(textInput.value);
-            
-            const l1 = getLuminance(bgRGB);
-            const l2 = getLuminance(textRGB);
-            
-            const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-            
-            previewCard.style.backgroundColor = bgInput.value;
-            previewCard.style.color = textInput.value;
-            ratioText.innerText = `Ratio: ${ratio.toFixed(2)}:1`;
+        const bgVal = bgInput.value || "#FFFFFF";
+        const textVal = textInput.value || "#333333";
+        
+        const bgRGB = getRGB(bgVal);
+        const textRGB = getRGB(textVal);
 
-            if (ratio >= 4.5) {
-                statusText.innerText = "PASS";
-                wcagText.innerText = "WCAG AA: SUCCESS";
-            } else if (ratio >= 3) {
-                statusText.innerText = "WEAK";
-                wcagText.innerText = "WCAG AA (Large): PASS";
-            } else {
-                statusText.innerText = "FAIL";
-                wcagText.innerText = "WCAG AA: FAILED";
-            }
-        } catch (e) {
-            statusText.innerText = "ERROR";
-            ratioText.innerText = "Invalid Hex Code";
+        if (!bgRGB || !textRGB) {
+            statusText.innerText = "WAIT";
+            ratioText.innerText = "Enter valid Hex codes";
+            wcagText.innerText = "-";
+            previewCard.style.backgroundColor = "#fafafa";
+            previewCard.style.color = "#ccc";
+            return;
+        }
+
+        const l1 = getLuminance(bgRGB);
+        const l2 = getLuminance(textRGB);
+        const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+        
+        previewCard.style.backgroundColor = bgVal;
+        previewCard.style.color = textVal;
+        ratioText.innerText = `Ratio: ${ratio.toFixed(2)}:1`;
+
+        if (ratio >= 4.5) {
+            statusText.innerText = "PASS";
+            wcagText.innerText = "WCAG AA: SUCCESS";
+        } else if (ratio >= 3) {
+            statusText.innerText = "WEAK";
+            wcagText.innerText = "WCAG AA (Large): PASS";
+        } else {
+            statusText.innerText = "FAIL";
+            wcagText.innerText = "WCAG AA: FAILED";
         }
     }
 
