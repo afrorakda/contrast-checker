@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Contrast Checker</title>
+    <style>
+        :root {
+            --main: #333;
+            --bg: #fff;
+            --accent: #eee;
+            --input-bg: #fafafa;
+            --radius: 15px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 360px;
+            padding: 25px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            margin-left: 5px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            background: var(--input-bg);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--main);
+            box-sizing: border-box;
+            outline: none;
+            -webkit-appearance: none;
+            -webkit-text-fill-color: var(--main);
+            opacity: 1 !important;
+        }
+
+        #preview-card {
+            margin-top: 25px;
+            padding: 30px 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--accent);
+            transition: 0.3s;
+        }
+
+        .result-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0;
+        }
+
+        .result-ratio {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .wcag-status {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 11px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+        
+        .kofi-link {
+            display: inline-block;
+            background: #111;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Contrast Checker</h1>
+
+    <div class="input-group">
+        <label>Background Color</label>
+        <input type="text" id="bgInput" value="#ffffff" placeholder="#FFFFFF">
+    </div>
+
+    <div class="input-group">
+        <label>Text Color</label>
+        <input type="text" id="textInput" value="#333333" placeholder="#333333">
+    </div>
+
+    <div id="preview-card">
+        <p class="result-title" id="statusText">PASS</p>
+        <div class="result-ratio" id="ratioText">Ratio: 12.63:1</div>
+        <div class="wcag-status" id="wcagText">WCAG AA: SUCCESS</div>
+    </div>
+
+    <footer>
+        <a href="https://ko-fi.com/afrorakda" class="kofi-link">☕ Support on Ko-fi</a>
+        <div>No login / No tracking / No ads / Browser only</div>
+        <div>Privacy Policy</div>
+        <div style="font-weight: bold; color: #333; margin-top: 5px;">afrorakda © 2026</div>
+    </footer>
+</div>
+
+<script>
+    const bgInput = document.getElementById('bgInput');
+    const textInput = document.getElementById('textInput');
+    const previewCard = document.getElementById('preview-card');
+    const statusText = document.getElementById('statusText');
+    const ratioText = document.getElementById('ratioText');
+    const wcagText = document.getElementById('wcagText');
+
+    function getRGB(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(s => s + s).join('');
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        return [r, g, b];
+    }
+
+    function getLuminance(rgb) {
+        const a = rgb.map(v => {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    }
+
+    function checkContrast() {
+        try {
+            const bgRGB = getRGB(bgInput.value);
+            const textRGB = getRGB(textInput.value);
+            
+            const l1 = getLuminance(bgRGB);
+            const l2 = getLuminance(textRGB);
+            
+            const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+            
+            previewCard.style.backgroundColor = bgInput.value;
+            previewCard.style.color = textInput.value;
+            ratioText.innerText = `Ratio: ${ratio.toFixed(2)}:1`;
+
+            if (ratio >= 4.5) {
+                statusText.innerText = "PASS";
+                wcagText.innerText = "WCAG AA: SUCCESS";
+            } else if (ratio >= 3) {
+                statusText.innerText = "WEAK";
+                wcagText.innerText = "WCAG AA (Large): PASS";
+            } else {
+                statusText.innerText = "FAIL";
+                wcagText.innerText = "WCAG AA: FAILED";
+            }
+        } catch (e) {
+            statusText.innerText = "ERROR";
+            ratioText.innerText = "Invalid Hex Code";
+        }
+    }
+
+    bgInput.addEventListener('input', checkContrast);
+    textInput.addEventListener('input', checkContrast);
+    checkContrast();
+</script>
+
+</body>
+</html>
