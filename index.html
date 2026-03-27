@@ -70,8 +70,9 @@
             margin-top: 30px; padding: 50px 20px;
             border-radius: var(--radius); border: 2px solid var(--accent);
             transition: 0.2s ease;
+            box-sizing: border-box; /* paddingを含めたサイズ計算 */
         }
-        .result-title { font-size: 2.5rem; font-weight: 900; margin: 0; }
+        .result-title { font-size: 2.5rem; font-weight: 900; margin: 0; text-transform: uppercase; }
         .result-ratio { font-size: 1rem; font-weight: 700; margin-top: 10px; }
         .wcag-status {
             display: inline-block; margin-top: 15px; font-size: 0.75rem;
@@ -115,7 +116,7 @@
     <div class="input-group">
         <label>Background Color</label>
         <div class="input-wrapper">
-            <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false">
+            <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false" maxlength="7">
             <button class="clear-btn" onclick="clearInput('bgInput')">×</button>
         </div>
     </div>
@@ -123,7 +124,7 @@
     <div class="input-group">
         <label>Text Color</label>
         <div class="input-wrapper">
-            <input type="text" id="textInput" placeholder="#333333" spellcheck="false">
+            <input type="text" id="textInput" placeholder="#333333" spellcheck="false" maxlength="7">
             <button class="clear-btn" onclick="clearInput('textInput')">×</button>
         </div>
     </div>
@@ -192,12 +193,12 @@
         const bgRGB = getRGB(bgVal);
         const textRGB = getRGB(textVal);
 
-        if (!bgRGB || !textRGB) {
+        if (!bgInput.value || !textInput.value || !bgRGB || !textRGB) {
             statusText.innerText = "WAIT";
             ratioText.innerText = "Check your Hex code";
             wcagText.innerText = "-";
             previewCard.style.backgroundColor = "#fafafa";
-            previewCard.style.color = "#ccc";
+            previewCard.style.color = "#767676"; // WAITの視認性をWEAK並みに回復
             return;
         }
 
@@ -205,19 +206,24 @@
         const l2 = getLuminance(textRGB);
         const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
         
-        previewCard.style.backgroundColor = bgVal;
-        previewCard.style.color = textVal;
         ratioText.innerText = `Ratio: ${ratio.toFixed(2)}:1`;
 
         if (ratio >= 4.5) {
             statusText.innerText = "PASS";
             wcagText.innerText = "WCAG AA: SUCCESS";
+            previewCard.style.backgroundColor = bgVal;
+            previewCard.style.color = textVal;
         } else if (ratio >= 3) {
             statusText.innerText = "WEAK";
             wcagText.innerText = "WCAG AA (Large): PASS";
+            previewCard.style.backgroundColor = bgVal;
+            previewCard.style.color = textVal;
         } else {
             statusText.innerText = "FAIL";
             wcagText.innerText = "WCAG AA: FAILED";
+            // 指示通り：FAILは薄い赤背景に、文字はハッキリと
+            previewCard.style.backgroundColor = "#fff1f0";
+            previewCard.style.color = "#d32f2f";
         }
     }
 
