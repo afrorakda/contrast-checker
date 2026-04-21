@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Contrast Checker</title>
     
     <link rel="icon" href="image_31.png">
@@ -17,115 +17,165 @@
             --radius: 15px;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--main);
-            margin: 0;
             display: flex;
             justify-content: center;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            padding: env(safe-area-inset-top, 20px) 20px env(safe-area-inset-bottom, 20px) 20px;
         }
 
         .container {
             width: 100%;
-            max-width: 360px;
-            padding: 40px 20px;
-            box-sizing: border-box;
-            text-align: center;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
         }
 
-        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
 
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-size: 0.75rem; font-weight: 800; margin-bottom: 8px; margin-left: 5px; color: #666; }
+        h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: -1.5px; }
+        
+        .hub-link {
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--main);
+            background: var(--accent);
+            padding: 8px 14px;
+            border-radius: 12px;
+        }
 
-        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .subtitle { font-size: 0.9rem; color: #666; font-weight: 800; margin-bottom: 25px; text-align: left; }
+
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .label {
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #555;
+            margin-bottom: 6px;
+            margin-left: 5px;
+            text-transform: uppercase;
+        }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         input {
             width: 100%;
-            padding: 15px 45px 15px 15px;
+            padding: 18px;
+            padding-right: 55px;
             border: 2px solid var(--accent);
             border-radius: var(--radius);
             background: var(--input-bg);
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 900;
             color: var(--main) !important;
-            box-sizing: border-box;
             outline: none;
             -webkit-appearance: none;
             -webkit-text-fill-color: var(--main) !important;
             opacity: 1 !important;
         }
-        input::placeholder { color: #aaa !important; -webkit-text-fill-color: #aaa !important; font-weight: 500; }
+        input::placeholder { color: #bbb !important; -webkit-text-fill-color: #bbb !important; font-weight: 800; }
+        input:focus { border-color: var(--main); }
 
-        .clear-btn {
-            position: absolute; right: 10px; width: 30px; height: 30px;
-            background: var(--accent); color: #666; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: none; font-size: 18px; font-weight: bold;
+        .clr-btn {
+            position: absolute;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            background: #ccc;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
+        .clr-btn.active { display: flex; }
 
         #preview-card {
-            margin-top: 30px; padding: 50px 20px;
-            border-radius: var(--radius); border: 2px solid var(--accent);
+            margin-top: 10px;
+            padding: 60px 20px;
+            border-radius: var(--radius);
+            border: 2px solid var(--accent);
             transition: 0.2s ease;
-            box-sizing: border-box; /* paddingを含めたサイズ計算 */
+            text-align: center;
         }
-        .result-title { font-size: 2.5rem; font-weight: 900; margin: 0; text-transform: uppercase; }
-        .result-ratio { font-size: 1rem; font-weight: 700; margin-top: 10px; }
+        .result-title { font-size: 3rem; font-weight: 900; margin: 0; text-transform: uppercase; line-height: 1; }
+        .result-ratio { font-size: 1.1rem; font-weight: 800; margin-top: 15px; }
         .wcag-status {
-            display: inline-block; margin-top: 15px; font-size: 0.75rem;
-            font-weight: 800; padding: 6px 14px; border-radius: 10px;
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            padding: 8px 16px;
+            border-radius: 12px;
             background: rgba(0,0,0,0.05);
         }
 
-        .footer-btns { margin-top: 40px; }
+        .footer-btns { margin-top: auto; padding: 20px 0; text-align: center; }
         .kofi-btn {
-            display: inline-block; background: var(--main); color: #fff;
-            padding: 12px 25px; border-radius: var(--radius);
-            text-decoration: none; font-weight: bold; font-size: 14px; margin-bottom: 12px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--main); color: #fff; width: 100%; max-width: 340px;
+            padding: 18px; border-radius: var(--radius);
+            text-decoration: none; font-weight: 900; font-size: 1rem; margin-bottom: 12px;
+            -webkit-text-fill-color: #fff;
         }
         .home-btn {
-            display: block; width: 60%; margin: 0 auto; background: var(--accent);
-            color: var(--main); border: none; padding: 10px;
-            border-radius: var(--radius); font-weight: 700; font-size: 13px; cursor: pointer;
+            display: block; width: 100%; max-width: 340px; margin: 0 auto; 
+            background: var(--accent); color: var(--main); border: none; 
+            padding: 14px; border-radius: var(--radius); font-weight: 800; font-size: 0.9rem; cursor: pointer;
         }
 
-        footer { margin-top: 40px; font-size: 11px; color: #aaa; line-height: 1.8; }
-        .footer-copy { font-weight: bold; color: #999; margin-top: 8px; }
+        footer { padding: 15px 0; text-align: center; font-size: 0.75rem; color: #999; line-height: 1.6; font-weight: 700; }
+        footer a { color: inherit; text-decoration: underline; }
 
         #modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100;
+            background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000;
+            backdrop-filter: blur(4px);
         }
         .modal-content {
-            background: #fff; width: 85%; max-width: 320px; padding: 30px;
+            background: #fff; width: 90%; max-width: 320px; padding: 35px;
             border-radius: var(--radius); text-align: left; position: relative;
         }
-        .modal-content h3 { margin-top: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
-        .modal-content p { font-size: 0.95rem; font-weight: 600; line-height: 1.6; color: #333; margin: 15px 0; }
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 20px; color: #ccc; cursor: pointer; }
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #ccc; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Contrast Checker</h1>
+    <header>
+        <h1>Contrast</h1>
+        <a href="https://afrorakda.github.io/" class="hub-link">🏠 Hub</a>
+    </header>
+    <p class="subtitle">Quick accessibility checker.</p>
 
     <div class="input-group">
-        <label>Background Color</label>
+        <div class="label">Background Color</div>
         <div class="input-wrapper">
-            <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false" maxlength="7">
-            <button class="clear-btn" onclick="clearInput('bgInput')">×</button>
+            <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false" maxlength="7" oninput="updateUI()">
+            <button class="clr-btn" id="bgClr" onclick="clearInput('bgInput')">×</button>
         </div>
     </div>
 
     <div class="input-group">
-        <label>Text Color</label>
+        <div class="label">Text Color</div>
         <div class="input-wrapper">
-            <input type="text" id="textInput" placeholder="#333333" spellcheck="false" maxlength="7">
-            <button class="clear-btn" onclick="clearInput('textInput')">×</button>
+            <input type="text" id="textInput" placeholder="#333333" spellcheck="false" maxlength="7" oninput="updateUI()">
+            <button class="clr-btn" id="textClr" onclick="clearInput('textInput')">×</button>
         </div>
     </div>
 
@@ -136,23 +186,24 @@
     </div>
 
     <div class="footer-btns">
-        <a href="https://ko-fi.com/afrorakda" target="_blank" class="kofi-btn">☕ Support me on Ko-fi</a>
-        <button class="home-btn" onclick="document.getElementById('modal').style.display='flex'">Add to Home Screen</button>
+        <a href="https://ko-fi.com/afrorakda" target="_blank" class="kofi-btn">☕️buy me a coffee</a>
+        <button class="home-btn" onclick="showModal()">Add to Home Screen</button>
     </div>
 
-    <footer>
-        <div>No login / No tracking / No ads / Browser only</div>
-        <div>Privacy Policy / afrorakda © 2026</div>
+    <footer id="dynamicFooter">
+        No login / No tracking / No ads / Browser only<br>
+        <a href="https://afrorakda.com/privacy/">Privacy Policy</a> / afrorakda © 2026
     </footer>
 </div>
 
-<div id="modal" onclick="this.style.display='none'">
+<div id="modal" onclick="hideModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="close-x" onclick="document.getElementById('modal').style.display='none'">×</span>
-        <h3>📱 Install</h3>
-        <p>Add to your home screen.</p>
-        <p>🍏 <strong>iPhone (Safari):</strong><br>Tap Share, then Add to Home Screen.</p>
-        <p>🤖 <strong>Android (Chrome):</strong><br>Tap Menu (⋮), then Add to Home Screen.</p>
+        <span class="close-x" onclick="hideModal()">×</span>
+        <h3 style="margin-bottom: 10px; font-weight: 900;">📱 Install</h3>
+        <div style="font-size: 0.9rem; line-height: 1.6; font-weight: 700;">
+            <p>🍏 <strong>iPhone:</strong><br>Share > Add to Home Screen</p>
+            <p style="margin-top:10px;">🤖 <strong>Android:</strong><br>Menu (⋮) > Add to Home Screen</p>
+        </div>
     </div>
 </div>
 
@@ -164,12 +215,20 @@
     const ratioText = document.getElementById('ratioText');
     const wcagText = document.getElementById('wcagText');
 
-    function clearInput(id) {
-        document.getElementById(id).value = '';
+    function updateUI() {
+        document.getElementById('bgClr').style.display = bgInput.value ? 'flex' : 'none';
+        document.getElementById('textClr').style.display = textInput.value ? 'flex' : 'none';
         checkContrast();
     }
 
+    function clearInput(id) {
+        document.getElementById(id).value = '';
+        updateUI();
+        document.getElementById(id).focus();
+    }
+
     function getRGB(hex) {
+        if (!hex) return null;
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(s => s + s).join('');
         if (hex.length !== 6) return null;
@@ -188,17 +247,17 @@
     }
 
     function checkContrast() {
-        const bgVal = bgInput.value || "#FFFFFF";
-        const textVal = textInput.value || "#333333";
-        const bgRGB = getRGB(bgVal);
-        const textRGB = getRGB(textVal);
+        const bgVal = bgInput.value.startsWith('#') ? bgInput.value : '#' + bgInput.value;
+        const textVal = textInput.value.startsWith('#') ? textInput.value : '#' + textInput.value;
+        const bgRGB = getRGB(bgInput.value);
+        const textRGB = getRGB(textInput.value);
 
         if (!bgInput.value || !textInput.value || !bgRGB || !textRGB) {
             statusText.innerText = "WAIT";
-            ratioText.innerText = "Check your Hex code";
+            ratioText.innerText = "Enter Hex codes";
             wcagText.innerText = "-";
             previewCard.style.backgroundColor = "#fafafa";
-            previewCard.style.color = "#767676"; // WAITの視認性をWEAK並みに回復
+            previewCard.style.color = "#777";
             return;
         }
 
@@ -221,14 +280,25 @@
         } else {
             statusText.innerText = "FAIL";
             wcagText.innerText = "WCAG AA: FAILED";
-            // 指示通り：FAILは薄い赤背景に、文字はハッキリと
             previewCard.style.backgroundColor = "#fff1f0";
             previewCard.style.color = "#d32f2f";
         }
     }
 
-    bgInput.addEventListener('input', checkContrast);
-    textInput.addEventListener('input', checkContrast);
+    function showModal() { document.getElementById('modal').style.display = 'flex'; }
+    function hideModal() { document.getElementById('modal').style.display = 'none'; }
+
+    async function loadFooter() {
+        try {
+            const res = await fetch('footer.json');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.footerHtml) document.getElementById('dynamicFooter').innerHTML = data.footerHtml;
+            }
+        } catch (e) {}
+    }
+
+    window.onload = loadFooter;
     checkContrast();
 </script>
 
