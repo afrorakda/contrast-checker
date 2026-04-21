@@ -15,6 +15,9 @@
             --accent: #eee;
             --input-bg: #fafafa;
             --radius: 15px;
+            --pass: #27ae60;
+            --weak: #f39c12;
+            --fail: #e74c3c;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -56,80 +59,54 @@
             border-radius: 12px;
         }
 
-        .subtitle { font-size: 0.9rem; color: #666; font-weight: 800; margin-bottom: 25px; text-align: left; }
+        .subtitle { font-size: 0.9rem; color: #666; font-weight: 800; margin-bottom: 20px; text-align: left; }
 
-        .input-group { text-align: left; margin-bottom: 15px; }
-        .label {
-            font-size: 0.8rem;
-            font-weight: 900;
-            color: #555;
-            margin-bottom: 6px;
-            margin-left: 5px;
-            text-transform: uppercase;
-        }
+        .input-group { text-align: left; margin-bottom: 12px; position: relative; }
+        .label { font-size: 0.75rem; font-weight: 900; color: #555; margin-bottom: 5px; margin-left: 5px; text-transform: uppercase; }
 
         .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         input {
-            width: 100%;
-            padding: 18px;
-            padding-right: 55px;
-            border: 2px solid var(--accent);
-            border-radius: var(--radius);
-            background: var(--input-bg);
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: var(--main) !important;
-            outline: none;
-            -webkit-appearance: none;
-            -webkit-text-fill-color: var(--main) !important;
-            opacity: 1 !important;
+            width: 100%; padding: 16px; padding-right: 45px; border: 2px solid var(--accent);
+            border-radius: var(--radius); background: var(--input-bg); font-size: 1.2rem; font-weight: 800;
+            color: var(--main) !important; outline: none; -webkit-appearance: none;
+            -webkit-text-fill-color: var(--main) !important; opacity: 1 !important;
         }
-        input::placeholder { color: #bbb !important; -webkit-text-fill-color: #bbb !important; font-weight: 800; }
+        input::placeholder { color: #bbb !important; -webkit-text-fill-color: #bbb !important; }
         input:focus { border-color: var(--main); }
 
         .clr-btn {
-            position: absolute;
-            right: 12px;
-            width: 34px;
-            height: 34px;
-            background: #ccc;
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 1.4rem;
-            font-weight: 900;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            position: absolute; right: 10px; width: 32px; height: 32px; background: #ccc;
+            border: none; border-radius: 50%; color: #fff; font-size: 1.3rem; font-weight: 900;
+            cursor: pointer; display: none; align-items: center; justify-content: center;
         }
         .clr-btn.active { display: flex; }
 
-        #preview-card {
-            margin-top: 10px;
-            padding: 60px 20px;
-            border-radius: var(--radius);
-            border: 2px solid var(--accent);
-            transition: 0.2s ease;
-            text-align: center;
+        .swap-btn {
+            background: var(--accent); border: none; border-radius: 10px;
+            padding: 8px; cursor: pointer; font-size: 1rem; margin-bottom: 15px;
+            align-self: center; transition: 0.2s; font-weight: 800; color: #555;
         }
-        .result-title { font-size: 3rem; font-weight: 900; margin: 0; text-transform: uppercase; line-height: 1; }
-        .result-ratio { font-size: 1.1rem; font-weight: 800; margin-top: 15px; }
-        .wcag-status {
-            display: inline-block;
-            margin-top: 15px;
-            font-size: 0.8rem;
-            font-weight: 900;
-            padding: 8px 16px;
-            border-radius: 12px;
-            background: rgba(0,0,0,0.05);
-        }
+        .swap-btn:active { transform: scale(0.9); }
 
-        .footer-btns { margin-top: auto; padding: 20px 0; text-align: center; }
+        /* Preview Card */
+        #preview-card {
+            padding: 40px 20px; border-radius: var(--radius); border: 6px solid #eee;
+            transition: all 0.3s ease; text-align: center; margin-bottom: 20px;
+        }
+        .result-title { font-size: 3rem; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -2px; }
+        .result-ratio { font-size: 1.2rem; font-weight: 800; margin: 15px 0 5px; }
+        .wcag-status { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; opacity: 0.8; }
+
+        .preview-texts { margin-top: 30px; text-align: left; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px; }
+        .p-small { font-size: 0.9rem; font-weight: 400; margin-bottom: 10px; }
+        .p-large { font-size: 1.4rem; font-weight: 700; }
+
+        /* Footer */
+        .footer-btns { margin-top: auto; padding: 15px 0; text-align: center; }
         .kofi-btn {
             display: inline-flex; align-items: center; justify-content: center;
             background: var(--main); color: #fff; width: 100%; max-width: 340px;
-            padding: 18px; border-radius: var(--radius);
+            padding: 16px; border-radius: var(--radius);
             text-decoration: none; font-weight: 900; font-size: 1rem; margin-bottom: 12px;
             -webkit-text-fill-color: #fff;
         }
@@ -164,25 +141,32 @@
     <p class="subtitle">Quick accessibility checker.</p>
 
     <div class="input-group">
-        <div class="label">Background Color</div>
+        <div class="label">Background</div>
         <div class="input-wrapper">
-            <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false" maxlength="7" oninput="updateUI()">
+            <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false" oninput="handleInput(this)">
             <button class="clr-btn" id="bgClr" onclick="clearInput('bgInput')">×</button>
         </div>
     </div>
 
+    <button class="swap-btn" onclick="swapColors()">⇅ Swap</button>
+
     <div class="input-group">
         <div class="label">Text Color</div>
         <div class="input-wrapper">
-            <input type="text" id="textInput" placeholder="#333333" spellcheck="false" maxlength="7" oninput="updateUI()">
+            <input type="text" id="textInput" placeholder="#333333" spellcheck="false" oninput="handleInput(this)">
             <button class="clr-btn" id="textClr" onclick="clearInput('textInput')">×</button>
         </div>
     </div>
 
     <div id="preview-card">
         <p class="result-title" id="statusText">WAIT</p>
-        <div class="result-ratio" id="ratioText">Enter Hex codes</div>
-        <div class="wcag-status" id="wcagText">-</div>
+        <p class="result-ratio" id="ratioText">Enter Hex codes</p>
+        <p class="wcag-status" id="wcagText">-</p>
+        
+        <div class="preview-texts">
+            <div class="p-small">Normal text (16px) preview.</div>
+            <div class="p-large">Large & Bold text preview.</div>
+        </div>
     </div>
 
     <div class="footer-btns">
@@ -215,16 +199,32 @@
     const ratioText = document.getElementById('ratioText');
     const wcagText = document.getElementById('wcagText');
 
-    function updateUI() {
-        document.getElementById('bgClr').style.display = bgInput.value ? 'flex' : 'none';
-        document.getElementById('textClr').style.display = textInput.value ? 'flex' : 'none';
+    function handleInput(el) {
+        // Sanitize: No spaces, handle #, limit to 6 hex chars (+ #)
+        let val = el.value.trim().replace(/\s+/g, '');
+        if (val.startsWith('#')) {
+            val = '#' + val.replace(/#/g, '').substring(0, 6);
+        } else {
+            val = val.substring(0, 6);
+        }
+        el.value = val;
+        
+        document.getElementById(el.id === 'bgInput' ? 'bgClr' : 'textClr').style.display = val ? 'flex' : 'none';
         checkContrast();
     }
 
     function clearInput(id) {
         document.getElementById(id).value = '';
-        updateUI();
+        handleInput(document.getElementById(id));
         document.getElementById(id).focus();
+    }
+
+    function swapColors() {
+        const temp = bgInput.value;
+        bgInput.value = textInput.value;
+        textInput.value = temp;
+        handleInput(bgInput);
+        handleInput(textInput);
     }
 
     function getRGB(hex) {
@@ -247,17 +247,18 @@
     }
 
     function checkContrast() {
-        const bgVal = bgInput.value.startsWith('#') ? bgInput.value : '#' + bgInput.value;
-        const textVal = textInput.value.startsWith('#') ? textInput.value : '#' + textInput.value;
-        const bgRGB = getRGB(bgInput.value);
-        const textRGB = getRGB(textInput.value);
+        const bgValRaw = bgInput.value;
+        const textValRaw = textInput.value;
+        const bgRGB = getRGB(bgValRaw);
+        const textRGB = getRGB(textValRaw);
 
-        if (!bgInput.value || !textInput.value || !bgRGB || !textRGB) {
+        if (!bgValRaw || !textValRaw || !bgRGB || !textRGB) {
             statusText.innerText = "WAIT";
             ratioText.innerText = "Enter Hex codes";
             wcagText.innerText = "-";
             previewCard.style.backgroundColor = "#fafafa";
             previewCard.style.color = "#777";
+            previewCard.style.borderColor = "#eee";
             return;
         }
 
@@ -266,22 +267,24 @@
         const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
         
         ratioText.innerText = `Ratio: ${ratio.toFixed(2)}:1`;
+        const bgVal = bgValRaw.startsWith('#') ? bgValRaw : '#' + bgValRaw;
+        const textVal = textValRaw.startsWith('#') ? textValRaw : '#' + textValRaw;
+
+        previewCard.style.backgroundColor = bgVal;
+        previewCard.style.color = textVal;
 
         if (ratio >= 4.5) {
             statusText.innerText = "PASS";
             wcagText.innerText = "WCAG AA: SUCCESS";
-            previewCard.style.backgroundColor = bgVal;
-            previewCard.style.color = textVal;
+            previewCard.style.borderColor = "var(--pass)";
         } else if (ratio >= 3) {
             statusText.innerText = "WEAK";
             wcagText.innerText = "WCAG AA (Large): PASS";
-            previewCard.style.backgroundColor = bgVal;
-            previewCard.style.color = textVal;
+            previewCard.style.borderColor = "var(--weak)";
         } else {
             statusText.innerText = "FAIL";
             wcagText.innerText = "WCAG AA: FAILED";
-            previewCard.style.backgroundColor = "#fff1f0";
-            previewCard.style.color = "#d32f2f";
+            previewCard.style.borderColor = "var(--fail)";
         }
     }
 
