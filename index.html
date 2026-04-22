@@ -61,15 +61,36 @@
 
         .subtitle { font-size: 0.9rem; color: #666; font-weight: 800; margin-bottom: 20px; text-align: left; }
 
+        /* Input Styles with Inline Preview */
         .input-group { text-align: left; margin-bottom: 12px; }
         .label { font-size: 0.75rem; font-weight: 900; color: #555; margin-bottom: 5px; margin-left: 5px; text-transform: uppercase; }
 
         .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        
+        .color-dot {
+            position: absolute;
+            left: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 1px solid var(--accent);
+            background: #eee;
+            transition: background 0.2s;
+        }
+
         input {
-            width: 100%; padding: 16px; padding-right: 45px; border: 2px solid var(--accent);
-            border-radius: var(--radius); background: var(--input-bg); font-size: 1.2rem; font-weight: 800;
-            color: var(--main) !important; outline: none; -webkit-appearance: none;
-            -webkit-text-fill-color: var(--main) !important; opacity: 1 !important;
+            width: 100%;
+            padding: 16px 45px 16px 48px; /* dotの分左にパディング */
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            background: var(--input-bg);
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--main) !important;
+            outline: none;
+            -webkit-appearance: none;
+            -webkit-text-fill-color: var(--main) !important;
+            opacity: 1 !important;
         }
         input::placeholder { color: #bbb !important; -webkit-text-fill-color: #bbb !important; }
         input:focus { border-color: var(--main); }
@@ -81,12 +102,18 @@
         }
         .clr-btn.active { display: flex; }
 
+        .action-row { display: flex; gap: 8px; margin-bottom: 15px; }
         .swap-btn {
-            background: var(--accent); border: none; border-radius: 10px;
-            padding: 10px 16px; cursor: pointer; font-size: 0.9rem; margin-bottom: 15px;
-            align-self: center; font-weight: 900; color: #555;
+            flex: 1; background: var(--accent); border: none; border-radius: 10px;
+            padding: 12px; cursor: pointer; font-size: 0.9rem; font-weight: 900; color: #555;
         }
-        .swap-btn:active { transform: scale(0.9); }
+        
+        /* Sample Buttons */
+        .sample-box { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .s-btn {
+            padding: 8px 12px; background: #f8f8f8; border: 1px solid var(--accent);
+            border-radius: 8px; font-size: 0.75rem; font-weight: 800; color: #777; cursor: pointer; white-space: nowrap;
+        }
 
         /* Preview Card */
         #preview-card {
@@ -98,8 +125,8 @@
         .wcag-status { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; opacity: 0.8; }
 
         .preview-texts { margin-top: 30px; text-align: left; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px; }
-        .p-small { font-size: 0.9rem; font-weight: 400; margin-bottom: 10px; }
-        .p-large { font-size: 1.4rem; font-weight: 700; }
+        .p-small { font-size: 0.95rem; font-weight: 400; margin-bottom: 10px; }
+        .p-large { font-size: 1.5rem; font-weight: 700; }
 
         /* Footer */
         .footer-btns { margin-top: auto; padding: 15px 0; text-align: center; }
@@ -143,19 +170,30 @@
     <div class="input-group">
         <div class="label">Background</div>
         <div class="input-wrapper">
+            <div class="color-dot" id="bgDot"></div>
             <input type="text" id="bgInput" placeholder="#FFFFFF" spellcheck="false" oninput="handleInput(this)">
             <button class="clr-btn" id="bgClr" onclick="clearInput('bgInput')">×</button>
         </div>
     </div>
 
-    <button class="swap-btn" onclick="swapColors()">⇅ Swap Colors</button>
+    <div class="action-row">
+        <button class="swap-btn" onclick="swapColors()">⇅ Swap Colors</button>
+    </div>
 
     <div class="input-group">
         <div class="label">Text Color</div>
         <div class="input-wrapper">
+            <div class="color-dot" id="textDot"></div>
             <input type="text" id="textInput" placeholder="#333333" spellcheck="false" oninput="handleInput(this)">
             <button class="clr-btn" id="textClr" onclick="clearInput('textInput')">×</button>
         </div>
+    </div>
+
+    <div class="sample-box">
+        <button class="s-btn" onclick="applySample('#FFFFFF', '#333333')">Pass (Safe)</button>
+        <button class="s-btn" onclick="applySample('#FFFFFF', '#808080')">Weak (Gray)</button>
+        <button class="s-btn" onclick="applySample('#EEEEEE', '#BBBBBB')">Fail (Light)</button>
+        <button class="s-btn" onclick="applySample('#0000FF', '#FF0000')">Fail (Vivid)</button>
     </div>
 
     <div id="preview-card">
@@ -208,6 +246,10 @@
         }
         el.value = val;
         
+        const dot = document.getElementById(el.id === 'bgInput' ? 'bgDot' : 'textDot');
+        const rgb = getRGB(val);
+        dot.style.backgroundColor = rgb ? (val.startsWith('#') ? val : '#' + val) : '#eee';
+
         document.getElementById(el.id === 'bgInput' ? 'bgClr' : 'textClr').style.display = val ? 'flex' : 'none';
         checkContrast();
     }
@@ -222,6 +264,13 @@
         const temp = bgInput.value;
         bgInput.value = textInput.value;
         textInput.value = temp;
+        handleInput(bgInput);
+        handleInput(textInput);
+    }
+
+    function applySample(bg, text) {
+        bgInput.value = bg;
+        textInput.value = text;
         handleInput(bgInput);
         handleInput(textInput);
     }
@@ -263,6 +312,7 @@
 
         const l1 = getLuminance(bgRGB);
         const l2 = getLuminance(textRGB);
+        // 微調整: 浮動小数点の誤差を考慮して2.99以上をWEAKとする
         const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
         
         ratioText.innerText = `Ratio: ${ratio.toFixed(2)}:1`;
@@ -272,12 +322,11 @@
         previewCard.style.backgroundColor = bgVal;
         previewCard.style.color = textVal;
 
-        // JSで直接borderを書き換えて優先順位を確保
         if (ratio >= 4.5) {
             statusText.innerText = "PASS";
             wcagText.innerText = "WCAG AA: SUCCESS";
             previewCard.style.border = "6px solid var(--pass)";
-        } else if (ratio >= 3) {
+        } else if (ratio >= 2.99) {
             statusText.innerText = "WEAK";
             wcagText.innerText = "WCAG AA (Large): PASS";
             previewCard.style.border = "6px solid var(--weak)";
