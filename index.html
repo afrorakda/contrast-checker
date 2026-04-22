@@ -61,7 +61,7 @@
 
         .subtitle { font-size: 0.9rem; color: #666; font-weight: 800; margin-bottom: 20px; text-align: left; }
 
-        .input-group { text-align: left; margin-bottom: 12px; position: relative; }
+        .input-group { text-align: left; margin-bottom: 12px; }
         .label { font-size: 0.75rem; font-weight: 900; color: #555; margin-bottom: 5px; margin-left: 5px; text-transform: uppercase; }
 
         .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
@@ -83,15 +83,15 @@
 
         .swap-btn {
             background: var(--accent); border: none; border-radius: 10px;
-            padding: 8px; cursor: pointer; font-size: 1rem; margin-bottom: 15px;
-            align-self: center; transition: 0.2s; font-weight: 800; color: #555;
+            padding: 10px 16px; cursor: pointer; font-size: 0.9rem; margin-bottom: 15px;
+            align-self: center; font-weight: 900; color: #555;
         }
         .swap-btn:active { transform: scale(0.9); }
 
         /* Preview Card */
         #preview-card {
-            padding: 40px 20px; border-radius: var(--radius); border: 6px solid #eee;
-            transition: all 0.3s ease; text-align: center; margin-bottom: 20px;
+            padding: 40px 20px; border-radius: var(--radius); border: 2px solid var(--accent);
+            transition: border 0.2s ease, background-color 0.2s ease; text-align: center; margin-bottom: 20px;
         }
         .result-title { font-size: 3rem; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -2px; }
         .result-ratio { font-size: 1.2rem; font-weight: 800; margin: 15px 0 5px; }
@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <button class="swap-btn" onclick="swapColors()">⇅ Swap</button>
+    <button class="swap-btn" onclick="swapColors()">⇅ Swap Colors</button>
 
     <div class="input-group">
         <div class="label">Text Color</div>
@@ -200,7 +200,6 @@
     const wcagText = document.getElementById('wcagText');
 
     function handleInput(el) {
-        // Sanitize: No spaces, handle #, limit to 6 hex chars (+ #)
         let val = el.value.trim().replace(/\s+/g, '');
         if (val.startsWith('#')) {
             val = '#' + val.replace(/#/g, '').substring(0, 6);
@@ -258,7 +257,7 @@
             wcagText.innerText = "-";
             previewCard.style.backgroundColor = "#fafafa";
             previewCard.style.color = "#777";
-            previewCard.style.borderColor = "#eee";
+            previewCard.style.border = "2px solid var(--accent)";
             return;
         }
 
@@ -273,18 +272,19 @@
         previewCard.style.backgroundColor = bgVal;
         previewCard.style.color = textVal;
 
+        // JSで直接borderを書き換えて優先順位を確保
         if (ratio >= 4.5) {
             statusText.innerText = "PASS";
             wcagText.innerText = "WCAG AA: SUCCESS";
-            previewCard.style.borderColor = "var(--pass)";
+            previewCard.style.border = "6px solid var(--pass)";
         } else if (ratio >= 3) {
             statusText.innerText = "WEAK";
             wcagText.innerText = "WCAG AA (Large): PASS";
-            previewCard.style.borderColor = "var(--weak)";
+            previewCard.style.border = "6px solid var(--weak)";
         } else {
             statusText.innerText = "FAIL";
             wcagText.innerText = "WCAG AA: FAILED";
-            previewCard.style.borderColor = "var(--fail)";
+            previewCard.style.border = "6px solid var(--fail)";
         }
     }
 
